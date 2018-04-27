@@ -2,13 +2,16 @@ import { Chromeless } from 'chromeless';
 
 import { errorResponse, runWarm, successResponse } from './utils';
 
+const USER_AGENT =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36';
 const ratios = async ({ body }, context, callback) => {
   const { url } = typeof body === 'string' ? JSON.parse(body) : body;
   try {
     const REPLY_SELECTOR =
       '.js-original-tweet .stream-item-footer .ProfileTweet-actionCountForPresentation';
-    const chromeless = new Chromeless();
+    const chromeless = new Chromeless({ launchChrome: false });
     const result = await chromeless
+      .setUserAgent(USER_AGENT)
       .goto(url)
       .wait(REPLY_SELECTOR)
       .evaluate(() => {
@@ -22,25 +25,13 @@ const ratios = async ({ body }, context, callback) => {
           replies: ratioBits[3].innerHTML,
         };
       });
+    await chromeless.end();
 
-    console.log(`result`, result);
-    // const response = await result.json();
-
-    // console.log(`response`, response);
-
-    callback(
-      null,
-      successResponse({
-        success: true,
-      })
-    );
+    callback(null, successResponse(result));
   } catch (e) {
     console.log(`There was an ERROR`, e);
     callback(null, errorResponse({ success: false }));
   }
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
 // runWarm function handles pings from the scheduler so you don't

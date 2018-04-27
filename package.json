@@ -36,6 +36,7 @@
     "lint-staged": "^7.0.0",
     "serverless": "^1.26.1",
     "serverless-offline": "^3.18.0",
+    "serverless-plugin-chrome": "1.0.0-38",
     "serverless-webpack": "^5.1.1",
     "webpack": "^4.3.0",
     "webpack-node-externals": "^1.5.4"
