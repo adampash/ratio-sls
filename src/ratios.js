@@ -20,9 +20,9 @@ const ratios = async ({ body }, context, callback) => {
         // eslint-disable-next-line
         const ratioBits = $(SELECTOR);
         return {
-          replies: ratioBits[0].innerHTML,
-          retweets: ratioBits[1].innerHTML,
-          likes: ratioBits[3].innerHTML,
+          replies: parseInt(ratioBits[0].innerHTML, 10) || 0,
+          retweets: parseInt(ratioBits[1].innerHTML, 10) || 0,
+          likes: parseInt(ratioBits[3].innerHTML, 10) || 0,
         };
       });
     await chromeless.end();
