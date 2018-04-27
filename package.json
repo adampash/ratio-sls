@@ -1,7 +1,6 @@
 {
-  "name": "serverless-starter",
+  "name": "ratio-sls",
   "version": "1.0.0",
-  "main": "src/handler.js",
   "license": "MIT",
   "scripts": {
     "bootstrap": "./scripts/bootstrap.sh",
