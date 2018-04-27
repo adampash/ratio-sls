@@ -1,0 +1,54 @@
+{
+  "name": "serverless-starter",
+  "version": "1.0.0",
+  "main": "src/handler.js",
+  "license": "MIT",
+  "scripts": {
+    "bootstrap": "./scripts/bootstrap.sh",
+    "deploy:env": "sls deploy --stage $NODE_ENV",
+    "deploy": "export NODE_ENV=dev && yarn deploy:env",
+    "deploy:production": "export NODE_ENV=production && yarn deploy:env",
+    "deploy:stage": "export NODE_ENV=stage && yarn deploy:env",
+    "lint": "eslint ./src",
+    "precommit": "lint-staged",
+    "serve": "export NODE_ENV=development && serverless offline start",
+    "tail:ratioed": "serverless logs --function ratios --tail",
+    "test": "jest --watch",
+    "watch:ratioed": "export NODE_ENV=development && serverless invoke local --watch --function ratios --path fixtures/event.json",
+    "watch:warm": "serverless invoke local --watch --function hello --path fixtures/scheduled.json"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-polyfill": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "husky": "^0.14.3",
+    "jest": "^22.4.3",
+    "lint-staged": "^7.0.0",
+    "serverless": "^1.26.1",
+    "serverless-offline": "^3.18.0",
+    "serverless-webpack": "^5.1.1",
+    "webpack": "^4.3.0",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.22.0",
+    "chromeless": "^1.5.1"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "yarn lint -- --fix",
+      "prettier --write --single-quote --trailing-comma es5",
+      "git add"
+    ]
+  }
+}
