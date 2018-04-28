@@ -72,6 +72,17 @@ functions:
       - schedule:
           rate: rate(5 minutes)
           enabled: true
+  screenshot:
+    timeout: 15 # optional, in seconds, default is 6
+    handler: src/screenshot-tweet.default
+    events:
+      - http:
+          path: screenshot
+          method: post
+      # Ping every 5 minutes to avoid cold starts
+      - schedule:
+          rate: rate(5 minutes)
+          enabled: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

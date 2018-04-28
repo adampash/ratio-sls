@@ -14,6 +14,7 @@
     "tail:ratioed": "serverless logs --function ratios --tail",
     "test": "jest --watch",
     "watch:ratioed": "export NODE_ENV=development && serverless invoke local --watch --function ratios --path fixtures/event.json",
+    "watch:screenshot": "export NODE_ENV=development && serverless invoke local --watch --function screenshot --path fixtures/event.json",
     "watch:warm": "serverless invoke local --watch --function hello --path fixtures/scheduled.json"
   },
   "devDependencies": {
