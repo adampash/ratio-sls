@@ -1,11 +1,23 @@
-function lambdaResponse({ json, statusCode, allowCORS = false }) {
+function lambdaResponse({
+  json,
+  binary,
+  statusCode,
+  allowCORS = false,
+  headers = {},
+}) {
   const response = {
     statusCode,
-    body: JSON.stringify(json),
+    body: (() => {
+      if (json) return JSON.stringify(json);
+      if (binary) return binary;
+      return '';
+    })(),
+    headers,
   };
 
   if (allowCORS) {
     response.headers = {
+      ...response.headers,
       'Access-Control-Allow-Origin': '*',
     };
   }
@@ -32,6 +44,14 @@ export function successResponse(json) {
   return lambdaResponse({
     json,
     statusCode: 200,
+  });
+}
+
+export function successResponseBinary(binary, headers) {
+  return lambdaResponse({
+    binary,
+    statusCode: 200,
+    headers,
   });
 }
 

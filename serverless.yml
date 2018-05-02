@@ -26,11 +26,13 @@ provider:
   # you can overwrite defaults here
   #  stage: dev
   #  region: us-east-1
+  environment:
+    S3_AWS_ACCESS_KEY: ${env:AWS_ACCESS_KEY}
+    S3_AWS_ACCESS_SECRET: ${env:AWS_SECRET_ACCESS_KEY}
+
 
 custom:
   webpackIncludeModules: true
-
-
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -79,6 +81,7 @@ functions:
       - http:
           path: screenshot
           method: post
+  
       # Ping every 5 minutes to avoid cold starts
       - schedule:
           rate: rate(5 minutes)

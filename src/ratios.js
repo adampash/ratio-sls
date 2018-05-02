@@ -1,27 +1,37 @@
 import { Chromeless } from 'chromeless';
 
-import { REPLY_SELECTOR, USER_AGENT } from './constants';
+import { KEY_MAP, REPLY_SELECTOR, STATS_RE, USER_AGENT } from './constants';
 import { errorResponse, runWarm, successResponse } from './utils';
 
 const ratios = async ({ body }, context, callback) => {
   const { url } = typeof body === 'string' ? JSON.parse(body) : body;
   try {
     const chromeless = new Chromeless({ launchChrome: false });
-    const result = await chromeless
+    // const chromeless = new Chromeless();
+    const statsStrings = await chromeless
       .setUserAgent(USER_AGENT)
       .goto(url)
       .wait(REPLY_SELECTOR)
       .evaluate(() => {
         const SELECTOR =
-          '.tweet.permalink-tweet .stream-item-footer .ProfileTweet-actionCountForPresentation';
+          '.tweet.permalink-tweet .stream-item-footer [data-tweet-stat-count]';
         // eslint-disable-next-line
-        const ratioBits = $(SELECTOR);
-        return {
-          replies: parseInt(ratioBits[0].innerHTML, 10) || 0,
-          retweets: parseInt(ratioBits[1].innerHTML, 10) || 0,
-          likes: parseInt(ratioBits[3].innerHTML, 10) || 0,
-        };
+        const result = $(SELECTOR)
+          .toArray()
+          .map(s => s.innerText);
+        return result;
       });
+    const result = statsStrings.reduce((acc, text) => {
+      if (STATS_RE.test(text)) {
+        // eslint-disable-next-line no-unused-vars
+        const [_, val, key] = text.match(STATS_RE);
+        return {
+          ...acc,
+          [KEY_MAP[key]]: parseInt(val.replace(/\D/g, ''), 10),
+        };
+      }
+      return acc;
+    }, {});
     await chromeless.end();
 
     callback(null, successResponse(result));
