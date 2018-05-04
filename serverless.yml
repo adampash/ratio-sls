@@ -84,7 +84,7 @@ functions:
   
       # Ping every 5 minutes to avoid cold starts
       - schedule:
-          rate: rate(5 minutes)
+          rate: rate(1 minutes)
           enabled: true
 
 #    The following are a few example events you can configure
