@@ -46,6 +46,7 @@
   "dependencies": {
     "babel-runtime": "^6.22.0",
     "chromeless": "^1.5.1",
+    "puppeteer-lambda": "^1.0.12",
     "s3": "^4.4.0",
     "uid": "^0.0.2"
   },

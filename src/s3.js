@@ -20,6 +20,8 @@ export const upload = localFile =>
         ACL: 'public-read',
       },
     };
+
+    console.log(`params`, params);
     const uploader = client.uploadFile(params);
     uploader.on('error', err => {
       console.error('unable to upload:', err.stack);

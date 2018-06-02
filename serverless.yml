@@ -65,6 +65,7 @@ custom:
 functions:
   ratios:
     timeout: 15 # optional, in seconds, default is 6
+    memorySize: 512
     handler: src/ratios.default
     events:
       - http:
@@ -75,7 +76,8 @@ functions:
           rate: rate(5 minutes)
           enabled: true
   screenshot:
-    timeout: 15 # optional, in seconds, default is 6
+    timeout: 30 # optional, in seconds, default is 6
+    memorySize: 512
     handler: src/screenshot-tweet.default
     events:
       - http:
@@ -84,7 +86,7 @@ functions:
   
       # Ping every 5 minutes to avoid cold starts
       - schedule:
-          rate: rate(1 minutes)
+          rate: rate(2 minutes)
           enabled: true
 
 #    The following are a few example events you can configure
@@ -114,7 +116,7 @@ functions:
 #       Value: "Some output value"
 
 plugins:
-  - serverless-plugin-chrome
+  # - serverless-plugin-chrome
   - serverless-webpack
   - serverless-offline
 

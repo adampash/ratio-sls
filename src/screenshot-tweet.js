@@ -1,26 +1,34 @@
-import { Chromeless } from 'chromeless';
+import puppeteerLambda from 'puppeteer-lambda';
 
-import { USER_AGENT } from './constants';
 import { errorResponse, runWarm, successResponse } from './utils';
+import { getRatios, openPage } from './page-actions';
 import { upload } from './s3';
 
 const screenshotTweet = async ({ body }, context, callback) => {
   const { url } = typeof body === 'string' ? JSON.parse(body) : body;
-  try {
-    const ORIGINAL_TWEET = '.permalink-inner.permalink-tweet-container';
-    const chromeless = new Chromeless({ launchChrome: false });
-    // const chromeless = new Chromeless();
-    const screenshot = await chromeless
-      .setUserAgent(USER_AGENT)
-      .goto(url)
-      .wait(ORIGINAL_TWEET)
-      .screenshot(ORIGINAL_TWEET);
-    await chromeless.end();
+  const browser = await puppeteerLambda.getBrowser({
+    headless: true,
+  });
 
+  let page;
+  try {
+    const { page: newPage } = await openPage({
+      url,
+      closeOnError: false,
+      browser,
+    });
+    page = newPage;
+    const ratios = await getRatios(page);
+    const screenshot = await screenshotTweet(page);
     const s3File = await upload(screenshot);
 
-    callback(null, successResponse({ screenshot: s3File }));
+    await page.close();
+    callback(
+      null,
+      successResponse({ ratios: await ratios, screenshot: await s3File })
+    );
   } catch (e) {
+    if (page) await page.close();
     console.log(`There was an ERROR`, e);
     callback(null, errorResponse({ success: false }));
   }
