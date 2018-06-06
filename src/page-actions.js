@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer-lambda';
+import puppeteer from 'puppeteer';
 import uid from 'uid';
 
 import { KEY_MAP, ORIGINAL_TWEET, REPLY_SELECTOR, STATS_RE } from './constants';
@@ -21,9 +21,11 @@ export const openPage = async ({
   closeOnError = true,
 }) => {
   const browser = await newBrowser(tmpBrowser);
+  console.log(`url`, url);
   try {
     const page = await (await newBrowser(browser)).newPage();
     const response = await page.goto(url);
+    console.log(`response`, response);
     if (response.headers().status.split(/\n/)[0] !== '200') {
       throw new Error('Page not found');
     }
@@ -41,13 +43,15 @@ export const screenshotTweet = async page => {
   // wait 6 seconds to give media time to load
   await page.waitFor(6000);
 
-  const screenshotPath = `${uid(10)}.png`;
+  const screenshotPath = `/tmp/${uid(10)}.png`;
   await tweet.screenshot({ path: screenshotPath });
   return screenshotPath;
 };
 
 export const getRatios = async page => {
+  console.log('wait for selector');
   await page.waitForSelector(REPLY_SELECTOR, { timeout: 10000 });
+  console.log('got selector, evaluate now');
   const [statsStrings, poll] = await page.evaluate(() => {
     const POLL_SELECTOR =
       '.tweet.permalink-tweet .card-type-poll4choice_text_only';

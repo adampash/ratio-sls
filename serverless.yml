@@ -29,6 +29,9 @@ provider:
   environment:
     S3_AWS_ACCESS_KEY: ${env:AWS_ACCESS_KEY}
     S3_AWS_ACCESS_SECRET: ${env:AWS_SECRET_ACCESS_KEY}
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: ${env:PUPPETEER_SKIP_CHROMIUM_DOWNLOAD}
+    CUSTOM_CHROME: ${env:CUSTOM_CHROME}
+    CHROME_BUCKET: ${env:CHROME_BUCKET}
 
 
 custom:
@@ -64,8 +67,7 @@ custom:
 
 functions:
   ratios:
-    timeout: 15 # optional, in seconds, default is 6
-    memorySize: 512
+    timeout: 20 # optional, in seconds, default is 6
     handler: src/ratios.default
     events:
       - http:
@@ -76,7 +78,7 @@ functions:
           rate: rate(5 minutes)
           enabled: true
   screenshot:
-    timeout: 30 # optional, in seconds, default is 6
+    timeout: 3y # optional, in seconds, default is 6
     memorySize: 512
     handler: src/screenshot-tweet.default
     events:

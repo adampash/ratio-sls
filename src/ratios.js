@@ -1,12 +1,12 @@
-import puppeteerLambda from 'puppeteer-lambda';
-
 import { errorResponse, runWarm, successResponse } from './utils';
 import { getRatios, openPage } from './page-actions';
+import getBrowser from './utils/get-browser';
 
 const ratios = async ({ body }, context, callback) => {
-  const browser = await puppeteerLambda.getBrowser({
-    headless: true,
-  });
+  // For keeping the browser launch b/w runs?
+  context.callbackWaitsForEmptyEventLoop = false; // eslint-disable-line
+  const browser = await getBrowser();
+  console.log('got browser');
 
   const { url } = typeof body === 'string' ? JSON.parse(body) : body;
   let page;
@@ -17,15 +17,17 @@ const ratios = async ({ body }, context, callback) => {
       browser,
     });
     page = newPage;
+    console.log('got page');
     const tweetRatios = await getRatios(page);
+    console.log('got ratios', tweetRatios);
     await page.close();
-    callback(null, successResponse(await tweetRatios));
+    console.log('closed page');
+    return callback(null, successResponse(tweetRatios));
   } catch (e) {
     if (page) await page.close();
     console.log(`There was an ERROR`, e);
-    callback(null, errorResponse({ success: false }));
+    return callback(null, errorResponse({ success: false, error: true }));
   }
-  callback(null, successResponse(await getRatios(url)));
 };
 
 // runWarm function handles pings from the scheduler so you don't

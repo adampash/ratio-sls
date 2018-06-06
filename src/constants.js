@@ -14,3 +14,5 @@ export const KEY_MAP = {
   retweets: 'retweets',
   retweet: 'retweet',
 };
+
+export const ORIGINAL_TWEET = '.permalink-inner.permalink-tweet-container';
