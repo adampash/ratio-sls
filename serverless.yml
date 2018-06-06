@@ -78,7 +78,7 @@ functions:
           rate: rate(5 minutes)
           enabled: true
   screenshot:
-    timeout: 3y # optional, in seconds, default is 6
+    timeout: 30 # optional, in seconds, default is 6
     memorySize: 512
     handler: src/screenshot-tweet.default
     events:
@@ -89,6 +89,15 @@ functions:
       # Ping every 5 minutes to avoid cold starts
       - schedule:
           rate: rate(2 minutes)
+          enabled: true
+
+  restartChrome:
+    memorySize: 512
+    handler: src/restart-chrome.default
+    events:
+      # Restart every 5 minutes
+      - schedule:
+          rate: rate(5 minutes)
           enabled: true
 
 #    The following are a few example events you can configure
