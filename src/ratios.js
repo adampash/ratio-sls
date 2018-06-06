@@ -1,11 +1,13 @@
 import { errorResponse, runWarm, successResponse } from './utils';
 import { getRatios, openPage } from './page-actions';
 import getBrowser from './utils/get-browser';
+// import puppeteer from 'puppeteer'
 
 const ratios = async ({ body }, context, callback) => {
   // For keeping the browser launch b/w runs?
   context.callbackWaitsForEmptyEventLoop = false; // eslint-disable-line
   const browser = await getBrowser();
+  // const browser = puppeteer.launch()
   console.log('got browser');
 
   const { url } = typeof body === 'string' ? JSON.parse(body) : body;

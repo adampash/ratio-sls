@@ -3,8 +3,8 @@ import getBrowser from './utils/get-browser';
 const restartChrome = async (props, context, callback) => {
   const browser = await getBrowser();
   await browser.close();
-  await getBrowser();
-  return callback(null, 'browser restarted');
+  console.log('closed browser');
+  return callback(null, 'browser closed');
 };
 
 // runWarm function handles pings from the scheduler so you don't
